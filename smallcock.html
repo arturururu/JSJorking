@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Kopf bei den Dächsen</title>
+    <style>
+        body {
+            background: #000 url('bilder/green.avif') no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #content { text-align: center; }
+
+        .gruselig-haus {
+            width: 400px;
+            cursor: pointer;
+            animation: wackeln 4s infinite ease-in-out alternate;
+        }
+
+        h1 {
+            color: white;
+            font-size: 32px;
+            text-shadow: 2px 2px 10px black;
+            animation: wackeln 4s infinite ease-in-out alternate-reverse;
+            margin-bottom: 20px;
+        }
+
+        @keyframes wackeln {
+            from { transform: rotate(-4deg); }
+            to { transform: rotate(4deg); }
+        }
+
+        #scare {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .jumpscare-anim {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            animation: mega-zoom 1.2s ease-in forwards;
+        }
+
+        @keyframes mega-zoom {
+            0% { transform: scale(0.1); opacity: 1; }
+            95% { transform: scale(120); opacity: 1; }
+            100% { transform: scale(150); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="content">
+        <h1>Kopf bei den Dächsen</h1>
+        <img src="bilder/haus.png" class="gruselig-haus" onclick="startJumpscare()">
+    </div>
+
+    <div id="scare">
+        <img src="bilder/dachs.png" id="jumpscare-img" style="width: 100vw; height: 100vh; object-fit: cover; display: none;">
+    </div>
+
+    <audio id="scream">
+        <source src="sound/boom.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function startJumpscare() {
+            const audio = document.getElementById('scream');
+            const scareLayer = document.getElementById('scare');
+            const jumpscareImg = document.getElementById('jumpscare-img');
+
+            // Sound sofort auf maximale Lautstärke
+            audio.volume = 1.0; 
+            audio.play();
+
+            // Sound stoppt exakt nach 1 Sekunde (1000ms)
+            setTimeout(() => {
+                audio.pause();
+                audio.currentTime = 0; 
+            }, 1500);
+
+            // Jumpscare Visuelles
+            scareLayer.style.display = 'flex';
+            jumpscareImg.style.display = 'block';
+            jumpscareImg.classList.add('jumpscare-anim');
+
+            // Blackscreen nach der Animation
+            setTimeout(() => {
+                document.body.style.background = "black";
+                jumpscareImg.style.display = "none";
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
